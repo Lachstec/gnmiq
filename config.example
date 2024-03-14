@@ -1,0 +1,5 @@
+[gnmiq]
+targets = ["abcde", "efg"]
+username = "testname"
+password = "password"
+mq_url = "test12345"
