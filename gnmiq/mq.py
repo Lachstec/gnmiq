@@ -1,8 +1,8 @@
 import pika
 
 class MQClient:
-    def __init__(self, url: str):
-        connection = pika.BlockingConnection(pika.ConnectionParameters(url))
+    def __init__(self, host: str):
+        connection = pika.BlockingConnection(pika.ConnectionParameters(host=host))
         self.channel = connection.channel()
         self.channel.queue_declare('gnmi_changes')
 
