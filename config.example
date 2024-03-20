@@ -3,3 +3,4 @@ targets = ["abcde", "efg"]
 username = "testname"
 password = "password"
 mq_url = "test12345"
+paths = ["openconfig:interfaces/interface[name=ethernet-1/1]"]

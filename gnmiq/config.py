@@ -8,12 +8,14 @@ class Configuration:
         username: Used to authenticate to the network devices (required)
         password: Used to authenticate to the network devices (required)
         mq_url: URL to the message queue where changes in configuration should be submitted (required)
+        paths: gNMI paths that should be subscribed to
     '''
     def __init__(self):
         self.targets: list[str] = []
         self.username: str = ''
         self.password: str = ''
         self.mq_url: str = ''
+        self.paths: list[str] = []
 
     '''
     Read the configuration file located at specified path.
@@ -27,4 +29,5 @@ class Configuration:
             self.username = values['username']
             self.password = values['password']
             self.mq_url = values['mq_url']
+            self.paths = values['paths']
 
