@@ -1,6 +1,8 @@
 import argparse
 from tomllib import TOMLDecodeError
 from gnmiq.config import Configuration
+from gnmiq.mq import MQClient
+from gnmiq.gnmi import GNMICollector
 
 def cli_args():
     parser = argparse.ArgumentParser(
@@ -14,11 +16,14 @@ def main():
     config = Configuration()
     try:
         config.read_file(args.file)
+        mq_client = MQClient(config.mq_url)
+        collector = GNMICollector(config)
+        collector.monitor()
     except TOMLDecodeError:
         print('configuration file is not valid toml')
         return
     except FileNotFoundError:
-        print('cant find config file "{}"'.format(args.file))
+        print('config file "{}" not found'.format(args.file))
         return
     
     print(config.mq_url)
