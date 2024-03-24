@@ -3,8 +3,12 @@ from gnmiq.mq import MQClient
 from gnmiq.config import Configuration
 
 class GNMICollector:
-    def __init__(self, config: Configuration):
+    '''
+    Subscribes to all paths on all targets specified in `config` and submits them to a RabbitMQ.
+    '''
+    def __init__(self, config: Configuration, mq_client: MQClient):
         self.config = config
+        self.mq = mq_client
 
     def monitor(self):
         req = {
@@ -13,15 +17,14 @@ class GNMICollector:
         for path in self.config.paths:
             path_request = {
                 'path': path,
-                'mode': 'sample',
-                'sample_interval': 10000000000
+                'mode': 'on_change',
+                'updates_only': True,
             }
             req['subscription'].append(path_request)
         for target in self.config.targets:
             with gNMIclient(target=(target, '57400'), username=self.config.username, password=self.config.password) as gnmi:
                 telemetry_stream = gnmi.subscribe_stream(subscribe = req)
-
                 for entry in telemetry_stream:
-                    print(entry)
+                    self.mq.publish_change(target, entry)
 
     

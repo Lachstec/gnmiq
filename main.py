@@ -16,8 +16,8 @@ def main():
     config = Configuration()
     try:
         config.read_file(args.file)
-        mq_client = MQClient(config.mq_url)
-        collector = GNMICollector(config)
+        mq_client = MQClient(config.mq_url, config.targets)
+        collector = GNMICollector(config, mq_client)
         collector.monitor()
     except TOMLDecodeError:
         print('configuration file is not valid toml')
