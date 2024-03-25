@@ -1,6 +1,7 @@
 from pygnmi.client import gNMIclient
 from gnmiq.mq import MQClient
 from gnmiq.config import Configuration
+import json
 
 class GNMICollector:
     '''
@@ -24,7 +25,8 @@ class GNMICollector:
         for target in self.config.targets:
             with gNMIclient(target=(target, '57400'), username=self.config.username, password=self.config.password) as gnmi:
                 telemetry_stream = gnmi.subscribe_stream(subscribe = req)
+                entries = []
                 for entry in telemetry_stream:
-                    self.mq.publish_change(target, entry)
+                    self.mq.publish_change(target, json.dumps(entry))
 
     
